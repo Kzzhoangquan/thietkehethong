@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê mẫu</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h2>Thống kê mẫu</h2>
+<div class="input-container">
+    <div>
+        <label for="ngayBatDau">Ngày bắt đầu:</label>
+        <input type="date" id="ngayBatDau" required>
+    </div>
+    <div>
+        <label for="ngayKetThuc">Ngày kết thúc:</label>
+        <input type="date" id="ngayKetThuc" required>
+    </div>
+</div>
+
+<div class="button-container">
+    <button id="btnHanhVi">Thống kê theo hành vi</button>
+    <button id="btnMoHinh">Thống kê theo mô hình huấn luyện</button>
+</div>
+
+<div id="progressBarContainer">
+    <div id="progressBar"></div>
+</div>
+
+<hr/>
+
+<div id="bangThongKe"></div>
+<div id="dsMau"></div>
+
+<script>
+
+    $("#btnHanhVi").on("click",layNgayHopLe);
+    $("#btnMoHinh").on("click",layNgayHopLe);
+
+    function layNgayHopLe() {
+        const start = $("#ngayBatDau").val();
+        const end = $("#ngayKetThuc").val();
+        if (!start || !end) {
+            console.log('1');
+            alert("Vui lòng nhập đầy đủ ngày bắt đầu và kết thúc.");
+            return null;
+        }
+
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        if (endDate < startDate) {
+            console.log('2')
+            alert("Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.");
+            return null;
+        }
+
+        return { start, end };
+    }
+
+    function hienThiBang(data, type) {
+        let html = `
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>`;
+
+        if (type === 'hanhvi') {
+            html += `<th>Mức độ</th><th>Mô tả</th>`;
+        } else if (type === 'mohinh') {
+            html += `<th>Phiên bản</th><th>Độ chính xác</th>`;
+        }
+
+        html += `<th>Số lượng mẫu</th></tr></thead><tbody>`;
+
+        data.forEach(item => {
+            html += `<tr onclick="layDsMau(${item.id}, '${type}')" style="cursor:pointer;">`;
+            html += `<td>${item.id}</td><td>${item.ten}</td>`;
+
+            if (type === 'hanhvi') {
+                html += `<td>${item.mucdo || ''}</td><td>${item.mota || ''}</td>`;
+            } else if (type === 'mohinh') {
+                html += `<td>${item.phienban || ''}</td><td>${item.dochinhxac || ''}</td>`;
+            }
+
+            html += `<td>${item.soluong}</td></tr>`;
+        });
+
+        html += `</tbody></table>`;
+        $("#bangThongKe").html(html);
+        $("#dsMau").html(""); // Xóa danh sách mẫu cũ
+    }
+
+    function dinhDangNgay(isoDateStr) {
+        const date = new Date(isoDateStr);
+        if (isNaN(date)) return isoDateStr;
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    function layDsMau(id, type) {
+    const url = type === 'hanhvi' ? '/dsmauhanhvi' : '/dsmaumohinh';
+
+    // Lấy giá trị ngày bắt đầu và ngày kết thúc từ input
+    const ngayBatDau = $("#ngayBatDau").val();
+    const ngayKetThuc = $("#ngayKetThuc").val();
+
+    // Kiểm tra nếu chưa nhập ngày thì báo lỗi và không gọi ajax
+    if (!ngayBatDau || !ngayKetThuc) {
+        alert("Vui lòng nhập ngày bắt đầu và ngày kết thúc trước khi xem danh sách mẫu.");
+        return;
+    }
+
+    const interval = showLoadingBar();
+
+    // Gửi kèm ngày bắt đầu và ngày kết thúc trong query params
+    $.get(url, { id: id, ngayBatDau: ngayBatDau, ngayKetThuc: ngayKetThuc })
+        .done(data => {
+            clearInterval(interval);
+            $("#progressBar").css("width", "100%");
+            setTimeout(() => $("#progressBarContainer").hide(), 300);
+
+            let html = `
+                <h4 class="mt-4">Danh sách mẫu</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Video Path</th>
+                            <th>Loại File</th>
+                            <th>Ngày Tạo</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            data.forEach(mau => {
+                html += `
+                    <tr>
+                        <td>${mau.id}</td>
+                        <td>${mau.videoPath || mau.videopath || ''}</td>
+                        <td>${mau.loaiFile || mau.loaifile || ''}</td>
+                        <td>${dinhDangNgay(mau.ngayTao || mau.ngaytao)}</td>
+                    </tr>`;
+            });
+
+            html += "</tbody></table>";
+            $("#dsMau").html(html);
+        })
+        .fail(() => {
+            clearInterval(interval);
+            $("#progressBarContainer").hide();
+            alert("Lỗi khi tải danh sách mẫu.");
+        });
+}
+
+
+    function showLoadingBar() {
+        $("#progressBarContainer").show();
+        $("#progressBar").css("width", "0%");
+        let width = 1;
+        const interval = setInterval(() => {
+            if (width >= 90) clearInterval(interval);
+            else {
+                width++;
+                $("#progressBar").css("width", width + "%");
+            }
+        }, 20);
+        return interval;
+    }
+
+    $("#btnHanhVi").click(function () {
+        const ngay = layNgayHopLe();
+        if (!ngay) return;
+
+        const interval = showLoadingBar();
+        $.get("/thongkemauhanhvi", { ngayBatDau: ngay.start, ngayKetThuc: ngay.end })
+            .done(data => {
+                clearInterval(interval);
+                $("#progressBar").css("width", "100%");
+                setTimeout(() => $("#progressBarContainer").hide(), 300);
+                hienThiBang(data, 'hanhvi');
+            })
+            .fail(() => {
+                clearInterval(interval);
+                $("#progressBarContainer").hide();
+                alert("Lỗi khi thống kê theo hành vi.");
+            });
+    });
+
+    $("#btnMoHinh").click(function () {
+        const ngay = layNgayHopLe();
+        if (!ngay) return;
+
+        const interval = showLoadingBar();
+        $.get("/thongkemaumohinh", { ngayBatDau: ngay.start, ngayKetThuc: ngay.end })
+            .done(data => {
+                clearInterval(interval);
+                $("#progressBar").css("width", "100%");
+                setTimeout(() => $("#progressBarContainer").hide(), 300);
+                hienThiBang(data, 'mohinh');
+            })
+            .fail(() => {
+                clearInterval(interval);
+                $("#progressBarContainer").hide();
+                alert("Lỗi khi thống kê theo mô hình.");
+            });
+    });
+</script>
+
+
+</body>
+</html>

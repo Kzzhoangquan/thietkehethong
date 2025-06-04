@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/apigateway/apigateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cameraservice/cameraservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/database/database/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/databaseservice/databaseservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eurekaserver/eurekaserver/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/nhandangservice/nhandangservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/thongkeservice/thongkeservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/thongkeservice_1/thongkeservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/videoservice/videoservice/src/main/java" charset="UTF-8" />
+  </component>
+</project>

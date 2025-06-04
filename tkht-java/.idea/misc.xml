@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/database/database/pom.xml" />
+        <option value="$PROJECT_DIR$/nhandang/nhandang/pom.xml" />
+        <option value="$PROJECT_DIR$/eurekaserver/eurekaserver/pom.xml" />
+        <option value="$PROJECT_DIR$/apigateway/apigateway/pom.xml" />
+        <option value="$PROJECT_DIR$/nhandangservice/nhandangservice/pom.xml" />
+        <option value="$PROJECT_DIR$/databaseservice/databaseservice/pom.xml" />
+        <option value="$PROJECT_DIR$/videoservice/videoservice/pom.xml" />
+        <option value="$PROJECT_DIR$/cameraservice/cameraservice/pom.xml" />
+        <option value="$PROJECT_DIR$/thongkeservice/thongkeservice/pom.xml" />
+        <option value="$PROJECT_DIR$/thongkeservice_fix/thongkeservice/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

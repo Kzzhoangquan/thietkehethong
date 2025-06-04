@@ -1,0 +1,26 @@
+package com.example.databaseservice.Model;
+
+public class TKMoHinh extends MoHinh {
+    private Long soluong;
+
+    public TKMoHinh() {
+        super();
+    }
+
+    public TKMoHinh(Long id, String ten, String phienban, Float dochinhxac, Long soluong) {
+        this.setId(id);
+        this.setTen(ten);
+        this.setPhienban(phienban);
+        this.setDochinhxac(dochinhxac);
+        this.soluong = soluong;
+    }
+
+    public Long getSoluong() {
+        return soluong;
+    }
+
+    public void setSoluong(Long soluong) {
+        this.soluong = soluong;
+    }
+}
+

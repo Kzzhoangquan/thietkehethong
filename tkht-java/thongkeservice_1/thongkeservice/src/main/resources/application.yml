@@ -1,0 +1,31 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: thongkeservice
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://eurekaserver:8761/eureka
+#    register-with-eureka: true
+#    fetch-registry: true
+#    registry-fetch-interval-seconds: 5
+#  instance:
+#    prefer-ip-address: true
+#    lease-renewal-interval-in-seconds: 10
+#    lease-expiration-duration-in-seconds: 30
+#logging:
+#  level:
+#    org.springframework: DEBUG
+#    com.example: DEBUG
